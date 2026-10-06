@@ -8,7 +8,5 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
-	console.log('Helllo From Home page')
-
-	return <>My App </>
+	return <>Home Page</>
 }
