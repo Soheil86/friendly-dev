@@ -1,10 +1,10 @@
 export type Project = {
-	id: string
+	id: number
 	title: string
 	description: string
 	image: string
 	url: string
 	date: string
-	categories: string
-	features: boolean
+	category: string
+	featured: boolean
 }
