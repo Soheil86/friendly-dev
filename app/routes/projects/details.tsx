@@ -1,4 +1,5 @@
 import type { Project } from '~/types'
+import { formatDate } from '~/utils/formatDate'
 import type { Route } from './+types/details'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link } from 'react-router'
@@ -51,7 +52,7 @@ const ProjectDetailsPage = ({ loaderData }: Route.ComponentProps) => {
 						{project.title}
 					</h1>
 					<p className='text-gray-300 text-sm mb-4'>
-						{new Date(project.date).toLocaleDateString()} • {project.category}
+						{formatDate(project.date)} • {project.category}
 					</p>
 					<p className='text-gray-200 mb-6'>{project.description}</p>
 

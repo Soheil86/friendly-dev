@@ -3,6 +3,7 @@ import type { Route } from './+types/index'
 import ProjectCard from '~/components/ProjectCard'
 import { useState } from 'react'
 import Pagination from '~/components/Pagination'
+import { AnimatePresence, motion } from 'framer-motion'
 
 export async function loader({
 	request,
@@ -16,7 +17,7 @@ export async function loader({
 const ProjectsPage = ({ loaderData }: Route.ComponentProps) => {
 	const [selectedCategory, setSelectedCategory] = useState('All')
 	const [currentPage, setCurrentPage] = useState(1)
-	const projectsPerPage = 4
+	const projectsPerPage = 6
 	const { projects } = loaderData as { projects: Project[] }
 
 	// Get unique categories
@@ -64,12 +65,16 @@ const ProjectsPage = ({ loaderData }: Route.ComponentProps) => {
 					</button>
 				))}
 			</div>
-			<div className='grid gap-6 sm:grid-cols-2'>
-				{currentProjects.map((project) => (
-					<ProjectCard key={project.id} project={project} />
-				))}
-			</div>
 
+			<AnimatePresence mode='wait'>
+				<motion.div layout className='grid gap-6 sm:grid-cols-2'>
+					{currentProjects.map((project) => (
+						<motion.div key={project.id} layout>
+							<ProjectCard project={project} />
+						</motion.div>
+					))}
+				</motion.div>
+			</AnimatePresence>
 			<Pagination
 				currentPage={currentPage}
 				totalPages={totalPages}
