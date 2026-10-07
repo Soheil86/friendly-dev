@@ -8,7 +8,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 export async function loader({
 	request,
 }: Route.LoaderArgs): Promise<{ projects: Project[] }> {
-	const response = await fetch('http://localhost:8000/projects')
+	const response = await fetch(`${import.meta.env.VITE_API_URL}/projects`)
 	const data = await response.json()
 
 	return { projects: data }

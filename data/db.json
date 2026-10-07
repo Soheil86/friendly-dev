@@ -68,7 +68,7 @@
 			"url": "https://example.com",
 			"date": "2024-09-01",
 			"category": "Fullstack",
-			"featured": false
+			"featured": true
 		}
 	]
 }
