@@ -53,10 +53,13 @@ const BlogPage = ({ loaderData }: Route.ComponentProps) => {
 					setCurrentPage(1) // Reset to first page on search
 				}}
 			/>
-			<div className='grid gap-6'>
-				{currentPosts.map((post) => (
-					<PostCard key={post.slug} post={post} />
-				))}
+
+			<div className='space-y-8'>
+				{currentPosts.length === 0 ? (
+					<p className='text-gray-400 text-center'>No posts found</p>
+				) : (
+					currentPosts.map((post) => <PostCard key={post.slug} post={post} />)
+				)}
 			</div>
 
 			{totalPages > 1 && (
