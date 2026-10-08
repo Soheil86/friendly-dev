@@ -1,7 +1,6 @@
 import ReactMarkdown from 'react-markdown'
 import type { Route } from './+types/details'
 import type { Post } from '~/types'
-import { div } from 'framer-motion/m'
 import { Link } from 'react-router'
 
 // Every markdown file in app/posts, as raw text, keyed by file path
