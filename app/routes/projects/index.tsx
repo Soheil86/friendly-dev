@@ -1,17 +1,36 @@
-import type { Project } from '~/types'
+import type {
+	Project,
+	ProjectApiItem,
+	StrapiProject,
+	StrapiResponse,
+} from '~/types'
 import type { Route } from './+types/index'
 import ProjectCard from '~/components/ProjectCard'
 import { useState } from 'react'
 import Pagination from '~/components/Pagination'
 import { AnimatePresence, motion } from 'framer-motion'
+import { getProjectImageUrl } from '~/utils/getProjectImageUrl'
 
 export async function loader({
 	request,
 }: Route.LoaderArgs): Promise<{ projects: Project[] }> {
-	const response = await fetch(`${import.meta.env.VITE_API_URL}/projects`)
-	const data = await response.json()
+	const response = await fetch(
+		`${import.meta.env.VITE_API_URL}/projects?populate=*`,
+	)
+	const json: StrapiResponse<StrapiProject> = await response.json()
 
-	return { projects: data }
+	const projects = json.data.map((item) => ({
+		id: item.id,
+		documentId: item.documentId,
+		title: item.title,
+		description: item.description,
+		image: getProjectImageUrl(item.image?.url),
+		url: item.url,
+		date: item.date,
+		category: item.category,
+		featured: item.featured,
+	}))
+	return { projects }
 }
 
 const ProjectsPage = ({ loaderData }: Route.ComponentProps) => {

@@ -1,34 +1,37 @@
-import type { Project } from '~/types'
+import type { Project, StrapiProject, StrapiResponse } from '~/types'
 import { formatDate } from '~/utils/formatDate'
 import type { Route } from './+types/details'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link } from 'react-router'
 
-export async function clientLoader({
-	request,
-	params,
-}: Route.ClientLoaderArgs): Promise<Project> {
+export async function loader({ request, params }: Route.LoaderArgs) {
 	const { id } = params
-	const response = await fetch(`${import.meta.env.VITE_API_URL}/projects/${id}`)
+	const response = await fetch(
+		`${import.meta.env.VITE_API_URL}/projects?filters[documentId][$eq]=${id}&populate=*`,
+	)
 	if (!response.ok) {
 		throw new Error(`Failed to fetch project with id ${id}`)
 	}
 
-	const project: Project = await response.json()
+	const json: StrapiResponse<StrapiProject> = await response.json()
+	const item = json.data[0]
+	const project: Project = {
+		id: item.id,
+		documentId: item.documentId,
+		title: item.title,
+		description: item.description,
+		image: item.image?.url ? `${item.image.url}` : '/images/no-image.png',
+		url: item.url,
+		date: item.date,
+		category: item.category,
+		featured: item.featured,
+	}
 
-	return project
-}
-
-export function HydrateFallback() {
-	return (
-		<div className='text-white text-2xl font-bold'>
-			Loading project details...
-		</div>
-	)
+	return { project }
 }
 
 const ProjectDetailsPage = ({ loaderData }: Route.ComponentProps) => {
-	const project = loaderData
+	const { project } = loaderData
 	return (
 		<>
 			<Link

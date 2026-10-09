@@ -1,8 +1,16 @@
 import FeatureProjects from '~/components/FeaturedProjects'
 import type { Route } from './+types/index'
-import type { Post, Project } from '~/types'
+import type {
+	Post,
+	Project,
+	ProjectApiItem,
+	StrapiPost,
+	StrapiProject,
+	StrapiResponse,
+} from '~/types'
 import AboutPreview from '~/components/AboutPreview'
 import LatestPosts from '~/components/LatestPost'
+import { getProjectImageUrl } from '~/utils/getProjectImageUrl'
 
 export function meta({}: Route.MetaArgs) {
 	return [
@@ -17,8 +25,10 @@ export async function loader({
 	const url = new URL(request.url)
 
 	const [projectsResponse, postsResponse] = await Promise.all([
-		fetch(`${import.meta.env.VITE_API_URL}/projects`),
-		fetch(new URL('/posts-meta.json', url)),
+		fetch(
+			`${import.meta.env.VITE_API_URL}/projects?filters[featured][$eq]=true&populate=*`,
+		),
+		fetch(`${import.meta.env.VITE_API_URL}/posts?populate=*&sort=date:desc`),
 	])
 
 	if (!projectsResponse.ok) {
@@ -29,18 +39,38 @@ export async function loader({
 		throw new Error('Failed to fetch posts')
 	}
 
-	const [projectsData, postsData] = await Promise.all([
-		projectsResponse.json(),
-		postsResponse.json(),
-	])
+	const [projectJson, postJson]: [
+		StrapiResponse<StrapiProject>,
+		StrapiResponse<StrapiPost>,
+	] = await Promise.all([projectsResponse.json(), postsResponse.json()])
 
-	return { projects: projectsData, posts: postsData }
+	const projects = projectJson.data.map((item) => ({
+		id: item.id,
+		documentId: item.documentId,
+		title: item.title,
+		description: item.description,
+		image: getProjectImageUrl(item.image?.url),
+		url: item.url,
+		date: item.date,
+		category: item.category,
+		featured: item.featured,
+	}))
+
+	const posts: Post[] = postJson.data.map((item) => ({
+		id: item.id,
+		title: item.title,
+		excerpt: item.excerpt,
+		slug: item.slug,
+		date: item.date,
+		body: item.body,
+		image: getProjectImageUrl(item.image?.url),
+	}))
+
+	return { projects, posts }
 }
 
 const HomePage = ({ loaderData }: Route.ComponentProps) => {
 	const { projects, posts } = loaderData
-
-	console.log('HomePage loaderData:', loaderData) // Debugging line
 
 	return (
 		<>

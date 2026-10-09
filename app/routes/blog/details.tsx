@@ -1,7 +1,8 @@
 import ReactMarkdown from 'react-markdown'
 import type { Route } from './+types/details'
-import type { Post } from '~/types'
+import type { Post, StrapiPost, StrapiResponse } from '~/types'
 import { Link } from 'react-router'
+import { getProjectImageUrl } from '~/utils/getProjectImageUrl'
 
 // Every markdown file in app/posts, as raw text, keyed by file path
 const markdownFiles = import.meta.glob<string>('../../posts/*.md', {
@@ -12,24 +13,34 @@ const markdownFiles = import.meta.glob<string>('../../posts/*.md', {
 export async function loader({
 	request,
 	params,
-}: Route.LoaderArgs): Promise<{ post: Post; markdown: string }> {
+}: Route.LoaderArgs): Promise<{ post: Post }> {
 	const { slug } = params
 
-	const url = new URL('/posts-meta.json', request.url)
-	const response = await fetch(url.href)
+	const response = await fetch(
+		`${import.meta.env.VITE_API_URL}/posts?filters[slug][$eq]=${slug}&populate=*`,
+	)
+
 	if (!response.ok) throw new Error('Failed to fetch data')
 
-	const posts: Post[] = await response.json()
-	const post = posts.find((post) => post.slug === slug)
-	const loadMarkdown = markdownFiles[`../../posts/${slug}.md`]
+	const json: StrapiResponse<StrapiPost> = await response.json()
 
-	if (!post || !loadMarkdown) {
+	if (!json.data.length) {
 		throw new Response('Post not found', { status: 404 })
 	}
 
-	const markdown = await loadMarkdown()
+	const item = json.data[0]
 
-	return { post, markdown }
+	const post: Post = {
+		id: item.id,
+		slug: item.slug,
+		excerpt: item.excerpt,
+		title: item.title,
+		date: item.date,
+		body: item.body,
+		image: getProjectImageUrl(item.image?.url),
+	}
+
+	return { post }
 }
 
 export function HydrateFallback() {
@@ -38,26 +49,40 @@ export function HydrateFallback() {
 	)
 }
 
-const BlogDetailsPage = ({ loaderData }: Route.ComponentProps) => {
-	const { post, markdown } = loaderData
-	const { title, date } = post
+type BlogPostDetailsPageProps = {
+	loaderData: {
+		post: Post
+	}
+}
+
+const BlogPostDetailsPage = ({ loaderData }: BlogPostDetailsPageProps) => {
+	const { post } = loaderData
 
 	return (
-		<div className='max-w-3xl mx-auto mt-10 px-6 py-6 bg-gray-900'>
-			<h1 className='text-3xl text-white font-bold mb-4'>{title}</h1>
-			<p className='text-gray-400 mb-6'>{new Date(date).toDateString()}</p>
+		<div className='max-w-3xl mx-auto px-6 py-12 bg-gray-900'>
+			<h1 className='text-3xl font-bold text-blue-400 mb-2'>{post.title}</h1>
+			<p className='text sm text-gray-400 mb-6'>
+				{new Date(post.date).toDateString()}
+			</p>
+
+			<img
+				src={post.image}
+				alt={post.title}
+				className='w-full h-64 object-cover mb-4 '
+			/>
+
 			<div className='prose prose-invert max-w-none mb-12'>
-				<ReactMarkdown>{markdown}</ReactMarkdown>
+				<ReactMarkdown>{post.body}</ReactMarkdown>
 			</div>
 
 			<Link
 				to='/blog'
-				className='inline-block mt-6 text-blue-400 hover:text-blue-500 transition'
+				className='inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition'
 			>
-				← Back to Blog
+				← Back To Posts
 			</Link>
 		</div>
 	)
 }
 
-export default BlogDetailsPage
+export default BlogPostDetailsPage
