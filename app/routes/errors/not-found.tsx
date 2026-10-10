@@ -1,4 +1,13 @@
-import { Link } from 'react-router'
+import { data, Link } from 'react-router'
+
+// Send a real 404 status so search engines don't index unknown URLs
+export function loader() {
+	return data(null, { status: 404 })
+}
+
+export function meta() {
+	return [{ title: 'Page Not Found | The Friendly Dev' }]
+}
 
 const NotFoundPage = () => {
 	return (

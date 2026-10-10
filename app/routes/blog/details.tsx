@@ -4,12 +4,6 @@ import type { Post, StrapiPost, StrapiResponse } from '~/types'
 import { Link } from 'react-router'
 import { getProjectImageUrl } from '~/utils/getProjectImageUrl'
 
-// Every markdown file in app/posts, as raw text, keyed by file path
-const markdownFiles = import.meta.glob<string>('../../posts/*.md', {
-	query: '?raw',
-	import: 'default',
-})
-
 export async function loader({
 	request,
 	params,

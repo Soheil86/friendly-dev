@@ -1,8 +1,4 @@
-import { data } from 'react-router'
-import type { Route } from './+types'
-
-
-const ContactPage = ({ actionData }: Route.ComponentProps) => {
+const ContactPage = () => {
   return (
     <div className='max-w-3xl mx-auto mt-12 px-6 py-8 bg-gray-900'>
       <h2 className='text-3xl font-bold text-white mb-8 text-center'>
@@ -17,7 +13,7 @@ const ContactPage = ({ actionData }: Route.ComponentProps) => {
         <div>
           <label
             htmlFor='name'
-            className='block tetx-sm font-medium text-gray-300'
+            className='block text-sm font-medium text-gray-300'
           >
             Full Name
           </label>
@@ -32,7 +28,7 @@ const ContactPage = ({ actionData }: Route.ComponentProps) => {
         <div>
           <label
             htmlFor='email'
-            className='block tetx-sm font-medium text-gray-300'
+            className='block text-sm font-medium text-gray-300'
           >
             Email
           </label>
@@ -47,7 +43,7 @@ const ContactPage = ({ actionData }: Route.ComponentProps) => {
         <div>
           <label
             htmlFor='subject'
-            className='block tetx-sm font-medium text-gray-300'
+            className='block text-sm font-medium text-gray-300'
           >
             Subject
           </label>
@@ -62,7 +58,7 @@ const ContactPage = ({ actionData }: Route.ComponentProps) => {
         <div>
           <label
             htmlFor='message'
-            className='block tetx-sm font-medium text-gray-300'
+            className='block text-sm font-medium text-gray-300'
           >
             Message
           </label>
@@ -74,7 +70,7 @@ const ContactPage = ({ actionData }: Route.ComponentProps) => {
           />
         </div>
 
-        <button className='w-full bg-blue-600 text-white py-2 rounded-lg bg-blue-600 hover:bg-blue-700 cursor-pointer'>
+        <button className='w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 cursor-pointer'>
           Send Message
         </button>
       </form>

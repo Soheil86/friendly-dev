@@ -15,7 +15,7 @@ import { getProjectImageUrl } from '~/utils/getProjectImageUrl'
 export function meta({}: Route.MetaArgs) {
 	return [
 		{ title: 'The Friendly Dev | Welcome' },
-		{ name: 'description', content: 'Custome website development' },
+		{ name: 'description', content: 'Custom web development and articles on modern JavaScript, React and full-stack development' },
 	]
 }
 

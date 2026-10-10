@@ -5,7 +5,7 @@ import type { Route } from '../home/+types'
 export function meta({}: Route.MetaArgs) {
 	return [
 		{ title: 'The Friendly Dev' },
-		{ name: 'description', content: 'Custome website development' },
+		{ name: 'description', content: 'Custom web development and articles on modern JavaScript, React and full-stack development' },
 	]
 }
 
