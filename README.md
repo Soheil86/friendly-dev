@@ -7,8 +7,7 @@ A server-rendered portfolio and blog built with **React Router v8 (framework mod
 **🔗 Live demo:** [friendly-dev-dun.vercel.app](https://friendly-dev-dun.vercel.app)
 **🗄️ Backend repo:** [Soheil86/friendly-dev-backend](https://github.com/Soheil86/friendly-dev-backend)
 
-<!-- Add a screenshot: save it as docs/screenshot.png and uncomment the line below -->
-<!-- ![Screenshot of The Friendly Dev homepage](docs/screenshot.png) -->
+![Screenshot of The Friendly Dev homepage](docs/screenshot.png)
 
 ## Features
 
